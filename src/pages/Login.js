@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,TextInput,Dimensions,Image,StatusBar,Alert } from 'react-native';
 import ButtonRoundBorder from '../components/ButtonRoundBorder';
-
+import { ProgressDialog } from 'react-native-simple-dialogs';
 
 const window = Dimensions.get('window');
 
@@ -13,9 +13,14 @@ class Login extends Component {
     constructor(props){
         super(props);
         this.state = {
-            username:'',
-            password:''
+            username:'nik123',
+            password:'123456',
+            showProgress:false
         };
+    }
+
+    displayProgress(){
+        this.setState({ showProgress: true })
     }
     render() {
         return (
@@ -42,7 +47,8 @@ class Login extends Component {
                                     />
                         <ButtonRoundBorder  title='Login' margintop={20} onPress={()=>{
 
-                        
+                            this.displayProgress()
+                            console.log("the value is : "+this.showProgress)
                             fetch('https://www.myvinotype.com/api/v2/login/',{
                                 method:'POST',
                                 headers: {
@@ -55,13 +61,13 @@ class Login extends Component {
                                 })
                             })
                             .then((response)=>{if(response.status==200){
-                                
-                                
+                                                            
                                 // DialogProgress.hide();
                                 // Alert.alert("great job","U are :");
                                 // console.log(response.headers)
                                 this.props.navigation.navigate('Home');
-                                this.setState={ progressVisible:false }
+                                this.setState({showProgress:false})  
+                                console.log("hai you loloo : "+this.state.showProgress)
                             }else{
                                 Alert.alert("BAD job",""+response.body);
                             }})
@@ -70,7 +76,14 @@ class Login extends Component {
                             });
                         }}  />
                         <Text style={styles.forgotText}>Forgot Password ?</Text>
-                        
+                        <ProgressDialog
+                            visible={this.state.showProgress}
+                            title="Progress Dialog"
+                            message="Please, wait..."
+                            animationType="slide"
+                            activityIndicatorSize="large"
+                            activityIndicatorColor="blue"
+                />
                     </View>
                 </View>
             </View> 
